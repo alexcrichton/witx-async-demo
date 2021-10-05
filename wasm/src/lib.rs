@@ -26,11 +26,23 @@ impl exports::Tarball for Tarball {
 
         log!("checking status code");
         if response.status() != 200 {
-            return Err(Error::BadStatus(format!(
+            let mut msg = format!(
                 "expected 200 ok got {} - {}",
                 response.status(),
                 response.status_text(),
-            )));
+            );
+            let headers = response.headers().entries();
+            if headers.len() > 0 {
+                msg.push_str("\nresponse headers:\n");
+                for (name, values) in headers {
+                    msg.push_str("\t");
+                    msg.push_str(&name);
+                    msg.push_str(": ");
+                    msg.push_str(&values.join(", "));
+                    msg.push_str("\n");
+                }
+            }
+            return Err(Error::BadStatus(msg));
         }
 
         log!("waiting for the body to arrive");

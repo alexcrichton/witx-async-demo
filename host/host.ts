@@ -1,14 +1,18 @@
 import * as i from './witx/imports.js';
-import { Exports, Tarball } from './witx/exports.js';
+import { Exports, Tarball, Error } from './witx/exports.js';
 
 const input = document.getElementById('input-url') as HTMLInputElement;
 const button = document.getElementById('input-button') as HTMLButtonElement;
+const form = document.getElementById('form') as HTMLFormElement;
 const allFiles = document.getElementById('files');
 const editor = ace.edit("editor");
 editor.setReadOnly(true);
 editor.setOption("useWorker", false);
 editor.session.setMode(null);
 const modelist = ace.require("ace/ext/modelist");
+const successList = document.querySelectorAll('.success');
+const errorList = document.querySelectorAll('.error');
+const error = document.getElementById('error') as HTMLDivElement;
 
 const importsToWasm: i.Imports = {
   async fetch(url) {
@@ -22,8 +26,8 @@ const importsToWasm: i.Imports = {
     }
   },
 
-  log: console.log,
-  logErr: console.error,
+  log: msg => console.log(msg),
+  logErr: msg => console.error(msg),
 };
 
 async function init() {
@@ -37,7 +41,9 @@ async function init() {
 
   input.disabled = false;
   button.disabled = false;
-  button.onclick = async function() {
+  form.onsubmit = async function(e) {
+    e.preventDefault();
+
     button.disabled = true;
     input.disabled = true;
     try {
@@ -45,18 +51,21 @@ async function init() {
       if (tarball.tag == 'ok') {
         render(tarball.val);
       } else {
-        console.error(tarball.val);
+        renderError(tarball.val);
       }
     } finally {
       button.disabled = false;
       input.disabled = false;
     }
   };
-
-  // ...
 }
 
 function render(tarball: Tarball) {
+  for (let element of successList)
+    (element as HTMLElement).style.display = 'block';
+  for (let element of errorList)
+    (element as HTMLElement).style.display = 'none';
+
   const ul = document.createElement('ul') as HTMLUListElement;
   let i = 0;
   for (let file of tarball.files()) {
@@ -89,6 +98,15 @@ function render(tarball: Tarball) {
   allFiles.appendChild(ul);
 
   ul.querySelector('a').click();
+}
+
+function renderError(err: Error) {
+  for (let element of errorList)
+    (element as HTMLElement).style.display = 'block';
+  for (let element of successList)
+    (element as HTMLElement).style.display = 'none';
+
+  error.innerText = err.val;
 }
 
 class HostResponse {
@@ -126,6 +144,13 @@ class HostHeaders {
     if (ret === null)
       return [];
     return ret.split(',');
+  }
+
+  entries() {
+    const ret = [];
+    for (let [name, value] of this.headers.entries())
+      ret.push([name, value.split(',')]);
+    return ret;
   }
 }
 

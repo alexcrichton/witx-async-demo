@@ -5,10 +5,12 @@ resource Response {
   body: async function() -> list<u8>
   status: function() -> u32
   status_text: function() -> string
+
 }
 
 resource Headers {
   get: function(name: string) -> list<string>
+  entries: function() -> list<tuple<string, list<string>>>
 }
 
 variant Error {

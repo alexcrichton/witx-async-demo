@@ -32,20 +32,34 @@ body {
 .selected {
   background: yellow;
 }
+
+.success, .error { display: none; }
+
+.error {
+  background: #ecd6d6;
+  padding: 20px;
+  border: 2px solid red;
+  margin: 10px;
+}
 </style>
   </head>
   <body>
     <div id='head'>
       <h1>Fetch a gzip-compressed tarball and poke it</h1>
-      <label for='a'>URL:</label>
-      <input id='input-url' disabled value="https://static.crates.io/crates/wasmtime/wasmtime-0.30.0.crate"/>
-      <button id='input-button' disabled>Fetch</button>
+      <a href="https://github.com/alexcrichton/witx-async-demo">source code for this demo</a>
+      <form id='form'>
+        <label for='a'>URL:</label>
+        <input id='input-url' disabled value="https://static.crates.io/crates/wasmtime/wasmtime-0.30.0.crate"/>
+        <button id='input-button' disabled>Fetch</button>
+      </form>
     </div>
 
     <div id='under-head'>
-
-      <div id='files'></div>
-      <div id='file'>
+      <div class='error'>
+        <code id='error'></code>
+      </div>
+      <div class='success' id='files'></div>
+      <div class='success' id='file'>
         <div id='editor'></div>
       </div>
     </div>
