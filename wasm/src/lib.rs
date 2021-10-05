@@ -5,12 +5,13 @@ use exports::Error;
 use std::io::{self, Read};
 use witx_bindgen_rust::Handle;
 
+// Helper macro that's like `println!` in Rust, only goes to our custom `log`
+// function we're importing from the environment.
 macro_rules! log {
 	($($t:tt)*) => (imports::log(&format!($($t)*)))
 }
 
 struct Exports;
-
 impl exports::Exports for Exports {}
 
 pub struct Tarball {
@@ -19,6 +20,8 @@ pub struct Tarball {
 
 #[witx_bindgen_rust::async_trait(?Send)]
 impl exports::Tarball for Tarball {
+    // Note the `async` on this method, which allows processing between two
+    // `await` points, the `fetch` and the reading of the body.
     async fn fetch(url: String) -> Result<Handle<Tarball>, exports::Error> {
         init();
         log!("fetching {}", url);
