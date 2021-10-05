@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  demo:
+    name: Build demo
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: rustup update stable --no-self-update && rustup default stable
+    - run: rustup target add wasm32-unknown-unknown
+    - run: npm install
+      working-directory: host
+    - run: ./build.sh
+    - uses: JamesIves/github-pages-deploy-action@4.1.4
+      with:
+        branch: gh-pages
+        folder: static
+        single-commit: true
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'

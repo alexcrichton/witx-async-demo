@@ -16,7 +16,10 @@ witx_bindgen=./witx-bindgen-install/bin/witx-bindgen
 # Compile the Rust code to WebAssembly
 export RUSTFLAGS=-Clink-args=--export-table
 cargo build --manifest-path wasm/Cargo.toml --target wasm32-unknown-unknown --release
-cp ./wasm/target/wasm32-unknown-unknown/release/witx_async_demo.wasm host
+
+rm -rf static
+mkdir static
+cp ./wasm/target/wasm32-unknown-unknown/release/witx_async_demo.wasm static
 
 
 if [ ! -d ace ]; then
@@ -25,12 +28,12 @@ if [ ! -d ace ]; then
   curl -L https://github.com/ajaxorg/ace-builds/archive/refs/tags/v1.4.13.tar.gz | tar xzf -
   cd ..
 fi
-rm -rf host/ace
-cp -r ace/ace-builds-1.4.13/src host/ace
+cp -r ace/ace-builds-1.4.13/src static/ace
 
 # Generate bindings for JS
+cp host/host.ts host/index.html static
 $witx_bindgen js \
         --import imports.witx \
 	--export exports.witx \
-        --out-dir host/witx
-(cd host && npx tsc host.ts --target es2020)
+        --out-dir static/witx
+(cd host && npx tsc ../static/host.ts --target es6)

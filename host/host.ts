@@ -9,9 +9,6 @@ editor.setReadOnly(true);
 editor.setOption("useWorker", false);
 editor.session.setMode(null);
 const modelist = ace.require("ace/ext/modelist");
-console.log(modelist);
-
-(window as any).editor = editor;
 
 const importsToWasm: i.Imports = {
   async fetch(url) {
