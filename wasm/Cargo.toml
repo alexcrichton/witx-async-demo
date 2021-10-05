@@ -8,3 +8,5 @@ crate-type = ['cdylib']
 
 [dependencies]
 witx-bindgen-rust = { git = 'https://github.com/bytecodealliance/witx-bindgen' }
+flate2 = "1.0"
+tar = "0.4"

@@ -2,3 +2,7 @@ target
 host.js
 node_modules
 package-lock.json
+witx-bindgen-install
+host/witx
+ace
+*.wasm

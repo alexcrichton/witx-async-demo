@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+<style type="text/css" media="screen">
+body {
+  display: flex;
+  min-height: 800px;
+  flex-direction: column;
+}
+
+#head {
+  width: 100%;
+}
+#under-head {
+  display: flex;
+  flex-direction: row;
+}
+#input-url {
+  width: 50%;
+}
+#file {
+  flex: 1;
+}
+
+#editor {
+  height: 100%;
+  width: 80%;
+  border: 1px solid black;
+}
+
+.selected {
+  background: yellow;
+}
+</style>
+  </head>
+  <body>
+    <div id='head'>
+      <h1>Fetch a gzip-compressed tarball and poke it</h1>
+      <label for='a'>URL:</label>
+      <input id='input-url' disabled value="https://static.crates.io/crates/wasmtime/wasmtime-0.30.0.crate"/>
+      <button id='input-button' disabled>Fetch</button>
+    </div>
+
+    <div id='under-head'>
+
+      <div id='files'></div>
+      <div id='file'>
+        <div id='editor'></div>
+      </div>
+    </div>
+
+  </body>
+  <script src="ace/ace.js"></script>
+  <script src="ace/ext-modelist.js"></script>
+  <script src='host.js' type=module></script>
+</html>
+

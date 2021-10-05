@@ -1,1 +1,21 @@
-sleep: async function()
+fetch: async function(url: string) -> expected<Response, Error>
+
+resource Response {
+  headers: function() -> Headers
+  body: async function() -> list<u8>
+  status: function() -> u32
+  status_text: function() -> string
+}
+
+resource Headers {
+  get: function(name: string) -> list<string>
+}
+
+variant Error {
+  Failure(string),
+  Aborted,
+}
+
+// helper functions to print messages
+log: function(msg: string)
+log_err: function(msg: string)

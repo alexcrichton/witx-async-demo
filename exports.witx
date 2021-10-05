@@ -1,1 +1,12 @@
-run: async function()
+resource Tarball {
+  static fetch: async function(url: string) -> expected<Tarball, Error>
+
+  files: function() -> list<string>
+  contents: function(idx: u32) -> string
+}
+
+variant Error {
+  BadStatus(string),
+  NotUtf8(string),
+  Io(string),
+}
